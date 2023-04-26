@@ -1,36 +1,81 @@
-import requests
-import urllib.request
-import requests
-import urllib
-from urllib.request import urlopen
-import urllib3
-from bs4 import BeautifulSoup
 import re
+import requests
+from bs4 import BeautifulSoup, Tag
 
-# for line in urllib.request.urlopen('https://raw.githubusercontent.com/finxter/FinxterTutorials/main/nlights.txt'):
-#    print(line.decode("utf-8"))
-obedy_accurate = []                 #Create an empty list to store all the food items in the future
+# the magic url
+site_url = "https://www.strava.cz/strava5/Jidelnicky?zarizeni=0253"
 
-def removetags(jidlo):              #Removes all the HTML tags
-    CLEANR = re.compile("<.*?>")
-    jidloclear = re.sub(CLEANR, '', jidlo)
-    return jidloclear
-    
+# the lunch class we use to easily parse stuff (we dont want žsón)
+class Lunch:
+    date: str
+    soup: str
+    lunch: str
 
-url = "https://www.strava.cz/strava5/Jidelnicky?zarizeni=0253"
-response = requests.get(url)
-soup = BeautifulSoup(response.content, 'html.parser')
-obedy_list = soup.find_all("div", {"class": "dialog"})          #Finds all divisions containing the food and food title
-for maybejidlo in obedy_list:
-    if "Oběd1" or "Pol&#233;vka" in maybejidlo:
-        pass
-    else:
-        obedy_list.remove(maybejidlo)
+    def __init__(self, date, soup, lunch) -> None:
+        self.date = date
+        self.soup = soup
+        self.lunch = lunch
 
-for obed_kandidat in obedy_list:
-    obed_kandidat = obed_kandidat.find_all("div", {"class": "nazev sloupec"})
-    obedy_accurate = obedy_accurate + [obed_kandidat]
 
-for jidlo in obedy_accurate: 
-        print(removetags(str(jidlo)))
-    
+# function to remove the html tags from text
+strip_html_tags_regex = re.compile("<.*?>")
+def removeHtmlTags(html: Tag) -> str:
+    return re.sub(strip_html_tags_regex, '', str(html))
+
+# function that returns the content of a div -> used to get the day
+get_div_content_regex = re.compile(r'<div[^>]*\bclass="den"[^>]*>(.*?)<\/div>')
+def getDay(html: Tag) -> str:
+    day_src = html.find("div", {"class" : "den"})
+    day_src = str(get_div_content_regex.findall(str(day_src)))
+    day_src = day_src.replace('[', '')
+    day_src = day_src.replace(']', '')
+    day_src = day_src.replace('\'', '')
+    return day_src
+
+def getSoup(html: Tag) -> str:
+    lines = removeHtmlTags(html)
+    lines = lines.splitlines()
+    for i,line in enumerate(lines):
+        if "Polévka" in line:
+            if i+1 < len(lines):
+                return lines[i+1]
+    return "None"
+
+
+def getLunch(html: Tag) -> str:
+    lines = removeHtmlTags(html)
+    lines = lines.splitlines()
+    for i,line in enumerate(lines):
+        if "Oběd1" in line:
+            if i+1 < len(lines):
+                return lines[i+1]
+    return "None"
+
+def parseLunch(html: Tag) -> Lunch:
+    return Lunch(
+                getDay(html),
+                getSoup(html),
+                getLunch(html)
+                )
+
+
+# the page source code
+site_response = requests.get(site_url)
+soup = BeautifulSoup(site_response.content, 'html.parser')
+lunch_orders = soup.find_all("div", {"class": "objednavka"})
+
+lunch = parseLunch(lunch_orders[0])
+print(lunch.date)
+print(lunch.soup)
+print(lunch.lunch)
+print("=================================")
+lunch = parseLunch(lunch_orders[1])
+print(lunch.date)
+print(lunch.soup)
+print(lunch.lunch)
+print("=================================")
+lunch = parseLunch(lunch_orders[2])
+print(lunch.date)
+print(lunch.soup)
+print(lunch.lunch)
+print("=================================")
