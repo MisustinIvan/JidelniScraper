@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bakal&#225;ři - přihl&#225;šen&#237; do syst&#233;mu</title>
+    <meta charset="utf-8">
+    <meta id="bkViewport" name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--CSS-->
+    <link rel='stylesheet' href='/next/css/fonty.css?v=20230405' type='text/css' />
+    <link rel="stylesheet" href="/next/css/base.css?v=20230405" type='text/css' />
+    <link rel="stylesheet" href="/next/css/loginpage.css?v=20230405" type='text/css' />
+    <link rel="stylesheet" href="/next/css/jquery-ui.min.css" type='text/css' />
+    <link rel="stylesheet" href="/next/css/jquery-ui.theme.min.css" type='text/css' />
+    <link rel="stylesheet" href="/next/css/ls-capslock.css?v=20230405" type='text/css' />
+    <link rel="stylesheet" href="/next/icons/baka-webicons/style.css?v=20230405" type='text/css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" />
+    <!--JQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="/next/js/ls-capslock.js?v=20230405"></script>
+    <script src='/next/js/loginFunctions.js?v=20230405'></script>
+    <script src="/next/js/master_core.js?v=20230405"></script>
+    <script type="text/javascript">
+        var unsecuredConnectionMsg = "Aplikace je nedostatečně zabezpečena! Chybí šifrované spojení. Více se dozvíte na <a href='http://www.bakalari.cz/static/gdpr' target='_blank' class='warning-link'>našich stránkách</a>.";
+        var unsupportedBrowserMsg = "Využíváte nepodporovaný prohlížeč. Některé funkcionality nemusí fungovat podle očekávání.";
+    </script>
+    <link rel="shortcut icon" href="/next/images/favicon.ico">
+</head>
+
+<body>
+    <form id="formlogin" action="Login" onsubmit="makeDisable()">
+        <div id="outer">
+            <div id="middle">
+                <div id="generalWarning" class="general-warning" style="display: none;"></div>
+                <div id="inner">
+                    <a href='#' id="loginLogo"><img src='/next/images/login/logo-bakalariLogin-252x51-min.png' alt='Bakaláři' /></a>
+                    <div class="bk-login-schoolName">Gymn&#225;zium Pierra de Coubertina, T&#225;bor, N&#225;měst&#237; Františka Křiž&#237;ka 860</div>
+                    <div id='loginBox'>
+                        <div id='info' onclick="showPopup(this)">i</div>
+                            <div class="space-top-40"></div>
+                        <div onkeypress="onEnterSubmit(event)">
+                            <div class="question-container">
+                                <input type="text" name="username" id="username" class="inputLogin" placeholder='Uživatelsk&#233; jm&#233;no' required />
+                                <span id="question" class="ico32-menu-napoveda link" onclick="showPopup(this)" style="visibility: hidden"></span>
+                            </div>
+                            <input type="password" name="password" id="password" class="inputLogin" placeholder='Heslo' required>
+                            <div class="checkbox-wrap">
+                                    <input type='checkbox' name='persistent' id='persistent' value="true" />
+                                    <label for='persistent' id="labelpersistent" class="stay-logged-in"><span>Zapamatovat</span></label>
+                                                                    <a href="/next/serpwd.aspx" class="forgotten-password" tabindex="-1">Zapomenut&#233; heslo</a>
+                            </div>
+                            <input type="hidden" name="returnUrl" />
+                                <button class="btn-login" type="submit" name="login" formaction="Login" formmethod="post" id="loginButton">
+                                    <span class="btn-login-loader"><i class="fa fa-spinner fa-spin"></i>Nač&#237;t&#225;m</span>
+                                    <span class="btn-login-text">Přihl&#225;sit</span>
+                                </button>
+                                                        <div class='both'></div>
+                        </div>
+                    </div>
+                    <div class="mobile-app">
+                        <div class="mobile-app-text"><span>Vyzkoušejte aplikaci Bakal&#225;ři na sv&#233;m chytr&#233;m telefonu</span></div>
+                        <div class="mobile-app-img">
+                            <a class="link" target="_blank" href="https://play.google.com/store/apps/details?id=cz.bakalari.mobile&hl=cs"><img src="/next/images/login/btn-googlePlay-cerna-min.png" /></a>
+                            <a class="link" target="_blank" href="https://itunes.apple.com/cz/app/bakalari-online/id1459368580?mt=8"><img src="/next/images/login/btn-appStore-cerna-min.png" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="info_popUp" class="login-popup" style="display: none;">
+                <div class="block-style title">
+                    <span>Gymn&#225;zium Pierra de Coubertina, T&#225;bor, N&#225;měst&#237; Františka Křiž&#237;ka 860</span>
+                </div>
+                <div class="block-style info">
+                    <span>Informační systém Gymnázia Pierra de Coubertina
+</span>
+                </div>
+                <div class="block-style bottom">
+                    <span>BAKAL&#193;ŘI software s.r.o. - 05.04.2023 (1.56.405.2)</span>
+                </div>
+            </div>
+
+            <div id="question_popUp" class="login-popup" style="display: none;">
+                <div class="block-style help">
+                    <div class="block-style">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+
+

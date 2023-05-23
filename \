@@ -1,0 +1,90 @@
+import json
+import requests
+from pprint import pprint
+
+username: str = "Misus91066"
+password: str = "94dFZccN"
+web_app_url: str = "https://bakalari.gymta.cz/"
+
+class bakalariScraper:
+    web_app_url: str
+
+    def __init__(self, web_app_url: str) -> None:
+        self.web_app_url = web_app_url
+
+    def firstAuth(self, username: str, password: str) -> requests.Response:
+        auth_request_headers = { "Content-Type": "application/x-www-form-urlencoded" }
+        auth_request_body = {
+                                "client_id" : "ANDR",
+                                "grant_type" : "password",
+                                "username" : username,
+                                "password" : password,
+                            }
+        return requests.post(url=f'{self.web_app_url}api/login', data=auth_request_body, headers=auth_request_headers)
+
+    def refreshTokenAuth(self, refresh_token: str) -> requests.Response:
+        auth_request_headers = { "Content-Type" : "application/x-www-form-urlencoded" }
+        auth_request_body = {
+                                "client_id" : "ANDR",
+                                "grant_type" : "refresh_token",
+                                "refresh_token" : refresh_token,
+                            }
+        return requests.post(url=f'{self.web_app_url}api/login', data=auth_request_body, headers=auth_request_headers)
+
+    def getTimetable(self, access_token: str) -> requests.Response:
+        request_headers = {
+                            "Content-Type" : "application/x-www-form-urlencoded",
+                            "Authorization" : f"Bearer {access_token}",
+                          }
+        return requests.get(url=f'{self.web_app_url}api/3/timetable/actual', headers=request_headers)
+
+# ------------------------------ SHOULD NOT TOUCH THIS ANY MORE ----------------------------------------- #
+
+
+# the hours class, containing all the important values
+class Hour:
+    subject: str
+    teacher: str
+    room: str
+    change: str
+
+    def __init__(self, subject, teacher, room, change) -> None:
+        self.subject = subject
+        self.teacher = teacher
+        self.room = room
+        self.change = change
+
+# the day class, basically a dict
+class Day:
+    hours: dict[str, Hour]
+
+    def __init__(self) -> None:
+        pass
+
+# timetable class containing all the hours and days
+class Timetable:
+    days: list[Day]
+    subjects: list
+    teachers: list
+    hours: list
+    rooms: list
+    
+    def __init__(self) -> None:
+        self.subjects = timetable_json["Subjects"]
+        self.teachers = timetable_json["Teachers"]
+        self.hours = timetable_json["Hours"]
+        self.rooms = timetable_json["Rooms"]
+       pass
+
+testScraper = bakalariScraper(web_app_url)
+
+resp = testScraper.firstAuth(username, password)
+refresh_token = resp.json()["refresh_token"]
+access_token = resp.json()["access_token"]
+
+timetable_resp = testScraper.getTimetable(access_token)
+timetable_json = json.loads(timetable_resp.text)
+
+timetable = Timetable()
+
+pprint(timetable_json.keys())

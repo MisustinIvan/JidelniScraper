@@ -17,14 +17,12 @@ class Lunch:
 # another class???? -> happier risa
 
 class lunchScraper:
-    url: str
     soup: BeautifulSoup
     lunches: List[Lunch]
     strip_html_tags_regex = re.compile("<.*?>")
     get_div_content_regex = re.compile(r'<div[^>]*\bclass="den"[^>]*>(.*?)<\/div>')
 
     def __init__(self, url) -> None:
-        self.url = url
         self.soup = BeautifulSoup(requests.get(url).content, 'html.parser')
         self.lunches = []
         orders = self.soup.find_all("div", {"class": "objednavka"})
@@ -38,11 +36,7 @@ class lunchScraper:
         return re.sub(self.strip_html_tags_regex, '', str(html))
 
     def parseLunch(self, html: Tag) -> Lunch:
-        return Lunch(
-                    self.getDay(html),
-                    self.getSoup(html),
-                    self.getLunch(html)
-                    )
+        return Lunch(self.getDay(html), self.getSoup(html), self.getLunch(html))
 
 
     def getLunch(self, html: Tag) -> str:
